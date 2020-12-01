@@ -11,7 +11,8 @@ class Assignments:
         self.due = due
         self.teacher = teacher
 
-driver = webdriver.Chrome('/home/ihyungsuk/codes/chromedriver')
+
+driver = webdriver.Chrome('C:\\Users\\형석\\Documents\\GitHub\\CalendarManager\\chromedriver.exe')
 driver.implicitly_wait(3)
 driver.get('https://go.sasa.hs.kr/auth')
 
