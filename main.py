@@ -1,14 +1,60 @@
 from google_auth_oauthlib.flow import InstalledAppFlow
+from oauth2client.service_account import ServiceAccountCredentials
+from httplib2 import Http
+from apiclient.discovery import build
+import datetime
 
-# 구글 클라우드 콘솔에서 다운받은 OAuth 2.0 클라이언트 파일경로
-creds_filename = '/home/ihyungsuk/Desktop/credentials.json'
+# # SCOPES = ['https://www.googleapis.com/auth/calendar']
+# # creds_filename = ServiceAccountCredentials.from_json_keyfile_name('credentials.json', SCOPES)
 
-# 사용 권한 지정
-# https://www.googleapis.com/auth/calendar	               캘린더 읽기/쓰기 권한
-# https://www.googleapis.com/auth/calendar.readonly	       캘린더 읽기 권한
+# # http_auth = creds_filename.authorize(Http())
+# # service = build('calendar', 'v3', http=http_auth)
+
+today = datetime.date.today().isoformat()
+
+creds_filename = 'credentials_mine.json'
 SCOPES = ['https://www.googleapis.com/auth/calendar']
 
-# 파일에 담긴 인증 정보로 구글 서버에 인증하기
-# 새 창이 열리면서 구글 로그인 및 정보 제공 동의 후 최종 인증이 완료됩니다.
 flow = InstalledAppFlow.from_client_secrets_file(creds_filename, SCOPES)
 creds = flow.run_local_server(port=0)
+service = build('calendar', 'v3', credentials=creds)
+
+event = {
+        'summary': '객지테스트', # 일정 제목
+        'location': '집', # 일정 장소
+        'description': '제발되어라', # 일정 설명
+        'start': { # 시작 날짜
+            'dateTime': "2020-12-03"+"T00:00:00", 
+            'timeZone': 'Asia/Seoul',
+        },
+        'end': { # 종료 날짜
+            'dateTime': "2020-12-03"+"T00:00:00", 
+            'timeZone': 'Asia/Seoul',
+        },
+        'recurrence': [
+        ],
+        'attendees': [
+        ],
+        'reminders': { # 알림 설정
+            'useDefault': False,
+            'overrides': [
+            ],
+        },
+    }
+
+# calendarId : 캘린더 ID. primary이 기본 값입니다.
+event = service.events().insert(calendarId='primary', body=event).execute()
+print('Event created: %s' % (event.get('htmlLink')))
+
+# colors = service.colors().get().execute()
+
+# Print available calendarListEntry colors.
+# for id, color in colors['calendar'].iteritem():
+#     print('colorId: %s' % id)
+#     print('Background: %s' % color['background'])
+#     print('Foreground: %s' % color['foreground'])
+# # Print (available event colors.
+# for color in colors['event']:
+#     print('colorId: %s' % id)
+#     print('Background: %s' % color['background'])
+#     print('Foreground: %s' % color['foreground'])
