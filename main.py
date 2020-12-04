@@ -108,7 +108,7 @@ class GroupAssignment(Assignment):
         self.__event = service.events().insert(calendarId='primary', body=self.__event).execute()
         print('Event created: %s' % (self.__event.get('htmlLink')))
 
-driver = webdriver.Chrome('C:\\Users\\형석\\Documents\\GitHub\\CalendarManager\\chromedriver.exe')
+driver = webdriver.Chrome('chromedriver.exe')
 driver.implicitly_wait(3)
 driver.get('https://go.sasa.hs.kr/auth')
 
