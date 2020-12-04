@@ -1,6 +1,7 @@
 from selenium import webdriver
 from bs4 import BeautifulSoup
 import time
+from tkinter import *
 
 from google_auth_oauthlib.flow import InstalledAppFlow
 from oauth2client.service_account import ServiceAccountCredentials
@@ -44,55 +45,75 @@ class Assignment:
         self.__event = service.events().insert(calendarId='primary', body=self.__event).execute()
         print('Event created: %s' % (self.__event.get('htmlLink')))
 
+    def return_text(self):
+        self._key, self._root
+        self._key = self._ent.get()
+        self._root.destroy()
+    def show_tkinter(self, txt):
+        self._key = ''
+        self._root = Tk() # 메인 창 생성
+        self._root.title('Calendar Manager') #창의 제목 설정
+        self._root.geometry('1000x500+200+200') # 너비x높이+x좌표+y좌표
+        self._label = Label(self._root, text=self._title +'\n' + self._teacher+'\n' + self._date + '\n' + self._deadline + '\n\n' + txt)
+        self._label.pack(padx=20, pady=50)
+        self._ent = Entry(self._root)
+        self._ent.pack()
+        self._btn = Button(self._root, text='확인', command=self.return_text)
+        self._btn.pack()
+        self._root.mainloop()
+
     def change_deadline(self):
         print()
         print(self._title, self._teacher, self._date, self._deadline)
-        ans = input("Do you want to change deadline? (yes/no)")
-        if(ans == 'yes'):
-            new_date = input("new date? (form: yyyy-mm-dd. ex-->2020-02-04)")
-            new_deadline = input("new deadline? (form: hh:mm:ss ex-->08:59:11)")
-            if str(type(new_date)) != """<class 'str'>""":
+        self.show_tkinter('Do you want to change deadline? (yes/no)')
+        if(self._key == 'yes'):
+            self.show_tkinter('new date? (form: yyyy-mm-dd. ex-->2020-02-04)')
+            self._new_date = self._key
+
+            self.show_tkinter('new deadline? (form: hh:mm:ss ex-->08:59:11)')
+            self._new_deadline = self._key
+
+            if str(type(self._new_date)) != """<class 'str'>""":
                 self.__check = 1
-            elif len(new_date) != 10:
+            elif len(self._new_date) != 10:
                 self.__check = 1
-            elif new_date[4] != '-' or new_date[7] != '-':
+            elif self._new_date[4] != '-' or self._new_date[7] != '-':
                 self.__check = 1
-            elif '2021' < new_date[:4] or new_date[:4] < '2020':
+            elif '2021' < self._new_date[:4] or self._new_date[:4] < '2020':
                 self.__check = 1
-            elif new_date[5:7] > '12' or new_date[5:7] < '01':
+            elif self._new_date[5:7] > '12' or self._new_date[5:7] < '01':
                 self.__check = 1
-            elif new_date[8:10]>'31' or new_date[8:10] < '01':
+            elif self._new_date[8:10]>'31' or self._new_date[8:10] < '01':
                 self.__check = 1
 
             if self.__check == 0:
-                self._date = new_date
+                self._date = self._new_date
 
             self.__check = 0
-            if str(type(new_deadline)) != """<class 'str'>""":
+            if str(type(self._new_deadline)) != """<class 'str'>""":
                 self.__check = 1
-            elif len(new_deadline) != 8:
+            elif len(self._new_deadline) != 8:
                 self.__check = 1
-            elif new_deadline[2] != ':' or new_deadline[5] != ':':
+            elif self._new_deadline[2] != ':' or self._new_deadline[5] != ':':
                 self.__check = 1
-            elif '23' < new_deadline[:2] or new_deadline[:2] < '00':
+            elif '23' < self._new_deadline[:2] or self._new_deadline[:2] < '00':
                 self.__check = 1
-            elif new_deadline[3:5] > '59' or new_deadline[3:5] < '00':
+            elif self._new_deadline[3:5] > '59' or self._new_deadline[3:5] < '00':
                 self.__check = 1
-            elif new_deadline[6:8]>'99' or new_deadline[6:8] < '00':
+            elif self._new_deadline[6:8]>'99' or self._new_deadline[6:8] < '00':
                 self.__check = 1
 
             if self.__check==0:
-                self._deadline = new_deadline
-
-
+                self._deadline = self._new_deadline
 
 class GroupAssignment(Assignment):
     def __init__(self, subject, ox, title, date, deadline, teacher):
         super().__init__(subject, ox, title, date, deadline, teacher)
-        print(self._title, self._teacher, self._date, self._deadline)
-        self._leader = input("Leader:")
-        self._member = input("Group members: ").split()
-        print()
+        self.show_tkinter('Enter leader: ')
+        self._leader = self._key
+
+        self.show_tkinter('Enter group members(띄어쓰기로 구분): ')
+        self._member = self._key.split()
 
     def append_to_calendar(self):
         self.__description = "until "+self._deadline[:5]+' '+self._subject+' by'+self._teacher
@@ -191,8 +212,23 @@ for i in l:
     idx +=1
 
 deadline_parameter = 1
-answer = input("Are there events that you want to change deadline? (yes/no)")
-if answer=='no':
+
+key = ''
+root = Tk() # 메인 창 생성
+root.title('Calendar Manager') #창의 제목 설정
+root.geometry('1000x500+200+200') # 너비x높이+x좌표+y좌표
+label = Label(root, text='Are there events that you want to change deadline? (yes/no)')
+label.pack(padx=20, pady=50)
+ent = Entry(root)
+ent.pack()
+def return_text():
+    global key, root, ent
+    key = ent.get()
+    root.destroy()
+btn = Button(root, text='확인', command=return_text)
+btn.pack()
+root.mainloop()
+if key=='no':
     deadline_parameter = 0
 for i in asm_list:
     if deadline_parameter == 1:
