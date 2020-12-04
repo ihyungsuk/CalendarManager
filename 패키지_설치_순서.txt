@@ -13,3 +13,6 @@ google_auth_oauthlib
 
 oauth2client
 1. pip install -t (프로젝트 경로) --upgrade oauth2client
+
+apiclient
+1. pip install -t (프로젝트 경로) --upgrade apiclient
