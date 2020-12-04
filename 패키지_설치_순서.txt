@@ -14,5 +14,5 @@ google_auth_oauthlib
 oauth2client
 1. pip install -t (프로젝트 경로) --upgrade oauth2client
 
-apiclient
+pip install -t C:\Users\형석\Documents\GitHub\CalendarManager --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib
 1. pip install -t (프로젝트 경로) --upgrade apiclient
