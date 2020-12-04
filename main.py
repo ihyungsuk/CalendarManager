@@ -1,6 +1,5 @@
 from selenium import webdriver
 from bs4 import BeautifulSoup
-import time
 from tkinter import *
 
 from google_auth_oauthlib.flow import InstalledAppFlow
